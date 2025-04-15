@@ -1,5 +1,7 @@
 const { Client, GatewayIntentBits, Partials, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, Events } = require('discord.js');
 const fs = require('fs');
+const http = require('http');  // Ajouter cette ligne pour créer un serveur HTTP.
+
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -23,6 +25,16 @@ function saveData() {
 
 client.once('ready', () => {
     console.log(`✅ Connecté en tant que ${client.user.tag}`);
+});
+
+// Créer un serveur HTTP pour résoudre l'erreur de port
+const server = http.createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('Bot is running');
+});
+
+server.listen(process.env.PORT || 10000, () => {
+    console.log(`Server is listening on port ${process.env.PORT || 10000}`);
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
@@ -154,4 +166,3 @@ client.on("messageCreate", async (message) => {
 });
 
 const token = process.env.DISCORD_TOKEN;
-
